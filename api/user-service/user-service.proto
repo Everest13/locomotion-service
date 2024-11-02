@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package user;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "user-server/pkg/user-server;user_service";
+
+service UserService {
+  rpc GetUser (GetUserRequest) returns (User) {
+    option (google.api.http) = {
+      post: "/user"
+      body: "*"
+    };
+  }
+
+  rpc CreateUser (UserCreate) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/user/new"
+      body: "*"
+    };
+  }
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+enum UserSex {
+  UNKNOWN = 0;
+  FEMALE = 1;
+  MALE = 2;
+}
+
+message UserCreate {
+  string first_name = 1 [json_name = "first_name"];
+  string second_name = 2 [json_name = "second_name"];
+  string patronymic = 3 [json_name = "patronymic"];
+  int64 age = 4;
+  UserSex sex = 5;
+  google.protobuf.Timestamp date_birth = 6 [json_name = "date_birth"];
+}
+
+message User {
+  int64 id = 1;
+  string first_name = 2 [json_name = "first_name"];
+  string second_name = 3 [json_name = "second_name"];
+  string patronymic = 4 [json_name = "patronymic"];
+  int64 age = 5;
+  UserSex sex = 6;
+  google.protobuf.Timestamp created_at = 7 [json_name = "created_at"];
+  google.protobuf.Timestamp date_birth = 8 [json_name = "date_birth"];
+}
+
+message CreateUserResponse {
+  bool result = 1;
+}

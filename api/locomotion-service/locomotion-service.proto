@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package locomotion;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "locomotion-server/pkg/locomotion-server;locomotion_service";
+
+service LocomotionService {
+  rpc GetLocomotion (GetLocomotionRequest) returns (Locomotion) {
+    option (google.api.http) = {
+      post: "/locomotion"
+      body: "*"
+    };
+  }
+
+  rpc CreateLocomotion (LocomotionCreate) returns (CreateLocomotionResponse) {
+    option (google.api.http) = {
+      post: "/locomotion/new"
+      body: "*"
+    };
+  }
+}
+
+message Locomotion {
+  int64 id = 1;
+  int64 user_id = 2 [json_name = "user_id"];
+  string country = 3;
+  int64 length_km = 4 [json_name = "length_km"];
+  int64 duration_days = 5 [json_name = "duration_days"];
+  google.protobuf.Timestamp created_at = 6 [json_name = "created_at"];
+}
+
+message LocomotionCreate {
+  int64 user_id = 1 [json_name = "user_id"];
+  string country = 2;
+  int64 length_km = 3 [json_name = "length_km"];
+  int64 duration_days = 4 [json_name = "duration_days"];
+}
+
+message GetLocomotionRequest {
+    Locomotion locomotion = 1;
+}
+
+message CreateLocomotionResponse {
+  bool response = 1;
+}
+
